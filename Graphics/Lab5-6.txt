@@ -1,0 +1,139 @@
+#include <stdio.h>
+#include <GL/glut.h>
+#include <math.h>
+#include<iostream>
+#include<stdlib.h>
+
+int i, xInc, x[10], y[10], yInc, input,vertices;
+double Q;
+
+using namespace std;
+
+void transLation()
+{
+	glColor3f(0, 1, 0.29);
+	glBegin(GL_LINE);
+
+	for ( i = 0; i < vertices; i++)
+	{
+		glVertex2i(x[i] + xInc, y[i] + yInc);
+	}
+}
+
+void Scaling() 
+{
+	glColor3f(0, 1, 0.29);
+	glBegin(GL_LINE);
+
+	for ( i = 0; i < vertices; i++)
+	{
+		glVertex2i(x[i] * xInc, y[i] * yInc);
+	}
+}
+
+void Rotation()
+{
+	glColor3f(0, 1, 0.29);
+	glBegin(GL_LINE);
+
+	for ( i = 0; i < vertices; i++)
+	{
+		double result=sin(180.00);
+		glVertex2i((x[i]*cos(Q)) - (y[i]*sin(Q)), (x[i]*sin(Q)) + (y[i]*cos(Q)));
+	}
+}
+
+
+
+void myDisplay(void)
+{
+	glClear(GL_COLOR_BUFFER_BIT);
+	glColor3f(0.0, 0.0, 0.0);
+	glPointSize(8.0);
+
+	glColor3f(1,0,0.29);
+	glBegin(GL_POINTS);
+
+	for ( i = 0; i < vertices; i++)
+	{
+		glVertex2i(x[i], y[i]);
+	}
+
+	switch (input)
+	{
+		case 1:
+			transLation();
+			break;
+		case 2:
+			Scaling();
+			break;
+		case 3:
+			Rotation();
+			break;
+		
+		default:
+			cout<<"Choose between 1 ,2 or 3";
+	}
+
+	glEnd();
+
+	glFlush();
+}
+void myInit(void)
+{
+	glClearColor(1.0, 1.0, 1.0, 0.0);
+	glColor3f(0.0f, 0.0f, 0.0f);
+	glPointSize(8.0);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	gluOrtho2D(0.0, 240.0, 0.0, 240.0);
+}
+
+void main(int argc, char** argv)
+{
+	glutInit(&argc, argv);
+	glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
+	glutInitWindowSize(420, 420);
+	glutInitWindowPosition(100, 100);
+
+	printf("\nInput no of Vertices : ");
+	scanf_s("%d", &vertices);
+
+	for ( i = 0; i < vertices; i++)
+	{
+		cout << "Point";
+		cin >> i;
+		cin >> x[i] >> y[i];
+	}
+	
+	cout << "Enter between choiches";
+	cout << "1 for Translation ,\t 2 for Scaling ,\t 3 for Rotation \t";
+	cin >> input;
+
+	switch (input)
+	{
+		case 1:
+			cout << "In Translation \t";
+			cout << "Give value for Xinc and yInc";
+			cin>>xInc>>yInc;
+			break;
+		case 2:
+			cout << "In Scaling \t";
+			cout << "Give value for Xinc and yInc";
+			cin >> xInc >> yInc;
+			break;
+		case 3:
+			cout << "In Rotation \t";
+			cout << "Give value for Q";
+			cin >> Q;
+			break;
+		
+		default:
+			cout << "Only 1,2 or 3 is allowed";
+	}
+
+	glutCreateWindow("my first attempt");
+	glutDisplayFunc(myDisplay);
+	myInit();
+	glutMainLoop();
+}

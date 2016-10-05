@@ -1,0 +1,173 @@
+#include <stdio.h>
+#include <GL/glut.h>
+#include <math.h>
+int xInc, yInc, x[10], y[10], v,  i,in;
+double Q;
+
+#define PI 3.14
+
+
+void myDisplay(void)
+{
+	glClear(GL_COLOR_BUFFER_BIT);
+	glColor3f(0.0, 0.0, 0.0);
+	glPointSize(8.0);
+
+	glColor3f(0, 0, 0.0);
+	glBegin(GL_POINTS); //using points
+
+	for (int i = 0; i < v; i++)
+	{
+		glVertex2i(x[i], y[i]);   //drew points doing any change
+	}
+	glEnd();
+	glFlush();
+
+	switch (in)
+	{
+	case 1:
+		glColor3f(0, 0, 1); //Translation
+		glBegin(GL_POINTS);
+
+		for ( i = 0; i < v; i++)
+		{
+			glVertex2i(x[i] + xInc, y[i] + yInc); //operation done.
+		}
+		glEnd();
+		glFlush();
+		break;
+	case 2:
+		glColor3f(0, 0, 1); //Scaling
+		glBegin(GL_POINTS);
+
+		for ( i = 0; i < v; i++)
+		{
+			glVertex2d(x[i] * xInc, y[i] * yInc); //operation done.
+
+		}
+		glEnd();
+		glFlush();
+		break;
+	case 3:
+		glColor3f(0, 0, 1); //Rotation
+		glBegin(GL_POINTS);
+
+		for (i = 0; i < v; i++)
+		{
+			double a = cos((Q*PI) / 180); //Radian Conversion
+			double b = sin((Q*PI) / 180);
+
+			glVertex2d((a*x[i]) - (b * y[i]), (b*x[i]) + (a*y[i])); //(xcos(Q)-ysin(Q)) & (xsin(Q)+ycos(Q))
+		}
+		glEnd();
+		glFlush();
+		break;
+	case 4:
+		glColor3f(0, 0, 1); //Reflection
+		glBegin(GL_POINTS);
+		for (i = 0; i < v; i++)
+		{
+			if (xInc == 1)  //x axis reflection
+			{
+				glVertex2d(x[i], y[i] * -1);
+			}
+			if (xInc == 2) //y axis reflection
+			{
+				glVertex2d(x[i] * -1, y[i]);
+			}
+			if (xInc == 3)
+			{
+				glVertex2d(x[i] * -1, y[i] * -1); //in both direction reflection
+			}
+			else
+			{
+				printf("No way ");
+			}
+		}
+		glEnd();
+		glFlush();
+		break;
+	default:
+		printf("\nInput between t,s,ro,re\n");
+	}
+
+	glEnd();
+
+	glFlush();
+}
+void myInit(void)
+{
+	glClearColor(1.0, 1.0, 1.0, 0.0);
+	glColor3f(0.0f, 0.0f, 0.0f);
+	glPointSize(4.0);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	gluOrtho2D(-800.0, 800.0, -800.0, 800.0);
+}
+
+void main(int argc, char** argv)
+{
+	glutInit(&argc, argv);
+	glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
+	glutInitWindowSize(420, 420);
+	glutInitWindowPosition(100, 100);
+
+	printf("\nEnter Vertices : ");
+	scanf_s("%d", &v); //take input how many points to take.
+
+	for (i = 0; i < v; i++)
+	{
+		printf("ENTER POINT %d : ", i);
+		scanf_s("%d %d", &x[i], &y[i]); //input the points
+	}
+
+	printf("Enter choice between 1 /2/3/4: ");
+	printf("\n Translation : 1\t  Scaling :2 \t  Rotation : 3    Reflection : 4\n");
+	scanf_s("%d", &in);
+
+	switch (in)
+	{
+	case 1:
+		printf("xtrans \t ytrans : "); //take translation unit to add with previous value
+		scanf_s("%d %d", &xInc, &yInc);
+		printf("xscale= %d  yscale= %d", xInc, yInc);
+		glutCreateWindow("Mid Lab");
+		glutDisplayFunc(myDisplay);
+		myInit();
+		glutMainLoop();
+		break;
+	case 2:
+		printf("xscale  \t  yscale: "); //take scaling unit value to multiply
+		scanf_s("%d %d", &xInc, &yInc);
+		printf("xscale= %d  yscale= %d", xInc, yInc);
+		glutCreateWindow("Mid Lab");
+		glutDisplayFunc(myDisplay);
+		myInit();
+		glutMainLoop();
+		break;
+	case 3:
+		printf(" Q : "); //take angel input to rotate the point
+		scanf_s("%lf", &Q);
+		printf("Angel is %lf", Q);
+		glutCreateWindow("Mid Lab");
+		glutDisplayFunc(myDisplay);
+		myInit();
+		glutMainLoop();
+		break;
+	case 4:
+		printf(" Press 1/2/3 for X/Y/X-Y AXIS \t");  //press numbers for reflection in x or y or x-y coordinate
+		scanf_s("%d", &xInc);
+		glutCreateWindow("Mid Lab");
+		glutDisplayFunc(myDisplay);
+		myInit();
+		glutMainLoop();
+		break;
+	default:
+		printf("Back");
+	}
+
+	glutCreateWindow("Mid Lab");
+	glutDisplayFunc(myDisplay); //display fuction
+	myInit();
+	glutMainLoop();
+} 

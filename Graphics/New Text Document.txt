@@ -1,0 +1,124 @@
+#include <stdio.h>
+#include <GL/glut.h>
+
+int m, x[10], y[10], n, ch,node;
+
+
+void doTrans()
+{
+	glColor3f(0, 1, 0.29);
+	glBegin(GL_POINTS);
+
+	for (int i = 0; i < node; i++)
+	{
+		glVertex2f(x[i] + m, y[i] + n);
+	}
+}
+
+void doScal() 
+{
+	glColor3f(0, 1, 0.29);
+	glBegin(GL_LINE_STRIP);
+
+	for (int i = 0; i < node; i++)
+	{
+		glVertex2f(x[i] * m, y[i] * n);
+	}
+}
+
+void doRoat()
+{
+	glColor3f(0, 1, 0.29);
+	glBegin(GL_LINE_STRIP);
+
+	for (int i = 0; i < node; i++)
+	{
+		glVertex2f(x[i] + m, y[i] + n);
+	}
+}
+void myDisplay(void)
+{
+	glClear(GL_COLOR_BUFFER_BIT);
+	glColor3f(0.0, 0.0, 0.0);
+	glPointSize(8.0);
+
+	glColor3f(1,0,0.29);
+	glBegin(GL_POINTS);
+
+	for (int i = 0; i < node; i++)
+	{
+		glVertex2f(x[i], y[i]);
+	}
+
+	switch (ch)
+	{
+		case 1:
+			doTrans();
+			break;
+		case 2:
+			doScal();
+			break;
+		case 3:
+			doRoat();
+			break;
+		default:
+			printf("\nWRONG INPUT:: ENTER '1' , '2' or '3'\n");
+	}
+
+	glEnd();
+
+	glFlush();
+}
+void myInit(void)
+{
+	glClearColor(1.0, 1.0, 1.0, 0.0);
+	glColor3f(0.0f, 0.0f, 0.0f);
+	glPointSize(8.0);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	gluOrtho2D(0.0, 240.0, 0.0, 240.0);
+}
+
+void main(int argc, char** argv)
+{
+	glutInit(&argc, argv);
+	glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
+	glutInitWindowSize(420, 420);
+	glutInitWindowPosition(100, 100);
+
+	printf("\nENTER THE NUMBER OF NODE : ");
+	scanf_s("%d", &node);
+
+	for (int i = 0; i < node; i++)
+	{
+		printf("ENTER POINT %d : ", i);
+		scanf_s("%d %d", &x[i], &y[i]);
+	}
+	
+	printf("ENTER YOUR CHOICE: ");
+	printf("\n\n\t #For Translation Enter '1' \n\n\t #For Scaling Enter '2'\n\n\t #For Rotation Enter '3'  _ _ _ ");
+	scanf_s("%d", &ch);
+
+	switch (ch)
+	{
+		case 1:
+			printf("ENTER Tx AND Ty : ");
+			scanf_s("%d %d", &m, &n);
+			break;
+		case 2:
+			printf("ENTER Tx AND Ty : ");
+			scanf_s("%d %d", &m, &n);
+			break;
+		case 3:
+			printf("ENTER THE ANGEL : ");
+			scanf_s("%d", &m);
+			break;
+		default:
+			printf("\nWRONG INPUT:: ENTER '1' , '2' or '3'\n");
+	}
+
+	glutCreateWindow("my first attempt");
+	glutDisplayFunc(myDisplay);
+	myInit();
+	glutMainLoop();
+}
